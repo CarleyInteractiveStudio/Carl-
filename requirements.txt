@@ -1,0 +1,9 @@
+torch
+transformers
+tokenizers
+pypdf
+ebooklib
+python-docx
+beautifulsoup4
+numpy
+tqdm
