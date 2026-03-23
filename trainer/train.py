@@ -45,18 +45,27 @@ def train_carl():
         corpus_text = f.read()
     tokenizer.train(corpus_text)
 
-    # 2. Preparar Datos
+    # 2. Preparar Datos (Limitamos el dataset para entrenamiento rapido en sandbox)
     print(f"Corpus text length: {len(corpus_text)}")
     dataset = CarlDataset(corpus_path, tokenizer, block_size)
+    # Reducir mucho el vocabulario para la prueba
+    vocab_size = 500
+    tokenizer = CarlTokenizer(vocab_size=vocab_size)
+    tokenizer.train(corpus_text)
+
+    # Reducir para que se vea progreso en el sandbox
+    if len(dataset) > 500:
+        print("Dataset muy grande. Limitando a 500 ejemplos para demostración.")
+        dataset.tokens = dataset.tokens[:500 + block_size]
     print(f"Dataset length: {len(dataset)}")
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-    # 3. Inicializar Modelo
+    # 3. Inicializar Modelo (Pequeño para demostración)
     config = CarlConfig(
         vocab_size=vocab_size,
-        n_embd=256,
-        n_head=8,
-        n_layer=6,
+        n_embd=128,
+        n_head=4,
+        n_layer=4,
         block_size=block_size
     )
     model = CarlModel(config).to(device)
