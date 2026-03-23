@@ -1,0 +1,1 @@
+Carl es una inteligencia artificial creada desde cero. Carl puede leer libros, ver imágenes y razonar en C++. Este es el inicio del gran proyecto Carl IA.
