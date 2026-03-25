@@ -2,6 +2,7 @@ import requests
 import os
 import time
 from tqdm import tqdm
+from scripts.registry import CarlRegistry
 
 class CarlBookDownloader:
     """Descarga libros en español de Project Gutenberg para entrenar a Carl."""
@@ -11,6 +12,7 @@ class CarlBookDownloader:
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
         self.base_url = "https://www.gutenberg.org/cache/epub/"
+        self.registry = CarlRegistry()
 
     def download_spanish_books(self, count=200):
         print(f"Buscando {count} libros en español para Carl...")
@@ -26,6 +28,10 @@ class CarlBookDownloader:
         pbar = tqdm(total=count, desc="Descargando libros")
 
         while downloaded < count and current_id < 70000:
+            if self.registry.is_downloaded(current_id):
+                current_id += 1
+                continue
+
             try:
                 # Intentar bajar el formato .txt (utf-8) que es mejor para Carl
                 file_url = f"{self.base_url}{current_id}/pg{current_id}.txt"
@@ -39,6 +45,7 @@ class CarlBookDownloader:
                         file_path = os.path.join(self.output_dir, f"libro_{current_id}.txt")
                         with open(file_path, "w", encoding="utf-8") as f:
                             f.write(text)
+                        self.registry.add_downloaded(current_id)
                         downloaded += 1
                         pbar.update(1)
                         # Pequeña pausa para ser respetuosos con el servidor

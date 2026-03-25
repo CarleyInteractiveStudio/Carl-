@@ -88,7 +88,12 @@ def train_carl():
     # 5. Guardar modelo final en formato PyTorch (para luego exportar a .ccia)
     os.makedirs("model/weights", exist_ok=True)
     torch.save(model.state_dict(), "model/weights/carl_v0.1.pt")
-    print("Entrenamiento completado. Pesos guardados en model/weights/carl_v0.1.pt")
+
+    # 6. Calificar Entrenamiento (Mock de Loss Final)
+    final_loss = loss.item() if 'loss' in locals() else 0.0
+    score = max(0, 100 - (final_loss * 10))
+    print(f"--- Calificación del Entrenamiento: {score:.1f}/100 ---")
+    print(f"Entrenamiento completado. Pesos guardados en model/weights/carl_v0.1.pt")
 
 if __name__ == "__main__":
     train_carl()
