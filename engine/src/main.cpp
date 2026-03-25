@@ -92,16 +92,27 @@ public:
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        std::cout << "Uso: ./carl_engine <modelo.ccia> \"tu prompt\"" << std::endl;
+        std::cout << "--- [MODO CHAT CARL C++] ---" << std::endl;
+        std::cout << "Uso: ./carl_engine <modelo.ccia> [prompt_opcional]" << std::endl;
         return 1;
     }
 
     CarlEngine carl;
     if (carl.load_model(argv[1])) {
-        // Simular IDs del prompt
-        std::vector<int> tokens = {1, 2, 3, 4};
-        std::cout << "Carl esta pensando..." << std::endl;
-        std::cout << "Carl: " << carl.generate(tokens, 10) << std::endl;
+        if (argc > 2) {
+            std::vector<int> tokens = {1, 2, 3, 4}; // Mock
+            std::cout << "Carl: " << carl.generate(tokens, 10) << std::endl;
+        } else {
+            std::cout << "Chat interactivo con Carl C++ (Escribe 'salir' para terminar)" << std::endl;
+            std::string input;
+            while (true) {
+                std::cout << "Tú: ";
+                std::getline(std::cin, input);
+                if (input == "salir") break;
+                std::vector<int> tokens = {1, 2, 3, 4}; // Mock
+                std::cout << "Carl: " << carl.generate(tokens, 10) << std::endl;
+            }
+        }
     }
 
     return 0;
