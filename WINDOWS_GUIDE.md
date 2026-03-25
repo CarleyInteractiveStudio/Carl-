@@ -32,13 +32,22 @@ Extrae el texto de todos los libros descargados:
 python extractor/extractor.py data/input
 ```
 
-### 5. ¡INICIAR ENTRENAMIENTO!
-Ahora que tienes el archivo `data/cleaned/corpus_entrenamiento.txt` de varios megabytes, corre el entrenador:
+### 5. ¡INICIAR LA CONSOLA DE CARL!
+He creado una consola interactiva para que no tengas que reiniciar el programa cada vez. Solo ejecútala una vez:
 ```powershell
 $env:PYTHONPATH = "."
-python trainer/train.py
+python carl_cli.py
 ```
-*Tip: Puedes abrir `trainer/train.py` y aumentar los `epochs = 5` o `10` para que Carl aprenda más pasadas de los libros.*
+Desde la consola podrás:
+- **descargar 6000**: Descarga miles de libros.
+- **procesar**: Extrae y limpia todo el texto.
+- **entrenar 10**: Entrena a Carl por 10 épocas.
+- **exportar fp16**: Exporta a formato binario comprimido para ahorrar RAM.
+
+### Consejos para tu Hardware (16GB RAM / 2GB VRAM):
+1. **Memoria (RAM):** Tienes 13GB libres, lo cual es **excelente** para procesar los 6,000 libros. El sistema cargará los textos en RAM sin problemas.
+2. **Tarjeta Gráfica (VRAM):** Tienes 2GB integrados. He ajustado el `batch_size = 8` para que no se sature. Si ves un error de "Out of Memory", baja el `batch_size` a `4` en `trainer/train.py`.
+3. **Velocidad:** Como es gráfica integrada, el entrenamiento puede tardar un poco. ¡Sé paciente con Carl, está aprendiendo mucho!
 
 ### 6. Exportar y Usar en C++
 Una vez termine el entrenamiento, exporta el cerebro a formato `.ccia`:

@@ -23,11 +23,11 @@ class CarlDataset(Dataset):
         return x, y
 
 def train_carl():
-    # Configuración
+    # Configuración optimizada para 16GB RAM / 2GB VRAM
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    block_size = 32
-    batch_size = 4
-    vocab_size = 5000
+    block_size = 64 # Aumentamos contexto
+    batch_size = 8  # Ajustado para 2GB VRAM
+    vocab_size = 10000 # Vocabulario completo
     learning_rate = 3e-4
     epochs = 1
 
@@ -53,19 +53,15 @@ def train_carl():
     tokenizer = CarlTokenizer(vocab_size=vocab_size)
     tokenizer.train(corpus_text)
 
-    # Reducir para que se vea progreso en el sandbox
-    if len(dataset) > 500:
-        print("Dataset muy grande. Limitando a 500 ejemplos para demostración.")
-        dataset.tokens = dataset.tokens[:500 + block_size]
     print(f"Dataset length: {len(dataset)}")
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-    # 3. Inicializar Modelo (Pequeño para demostración)
+    # 3. Inicializar Modelo (Optimizado para 13GB RAM disponible)
     config = CarlConfig(
         vocab_size=vocab_size,
-        n_embd=128,
-        n_head=4,
-        n_layer=4,
+        n_embd=256,
+        n_head=8,
+        n_layer=6,
         block_size=block_size
     )
     model = CarlModel(config).to(device)
