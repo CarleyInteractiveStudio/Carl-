@@ -18,9 +18,10 @@ def run_command(command_str):
         dl.download_spanish_books(cantidad)
 
     elif cmd == "procesar":
-        input_dir = parts[1] if len(parts) > 1 else "data/input"
+        # Uso: procesar [cantidad] o procesar (todos)
+        limit = int(parts[1]) if len(parts) > 1 else None
         ex = CarlDataExtractor()
-        ex.process_directory(input_dir)
+        ex.process_directory("data/input", limit=limit)
 
     elif cmd == "entrenar":
         epochs = int(parts[1]) if len(parts) > 1 else 1
@@ -37,8 +38,21 @@ def run_command(command_str):
         print("--- Entrando a modo Chat con Carl ---")
         run_carl_chat()
 
+    elif cmd == "lista":
+        from scripts.registry import CarlRegistry
+        reg = CarlRegistry()
+        print(f"--- Estadísticas de Carl ---")
+        print(f"Libros descargados: {len(reg.data['downloaded_ids'])}")
+        print(f"Libros procesados: {len(reg.data['processed_files'])}")
+
+    elif cmd == "limpiar_corpus":
+        path = "data/cleaned/corpus_entrenamiento.txt"
+        if os.path.exists(path):
+            os.remove(path)
+            print("Corpus de entrenamiento eliminado. Listo para una nueva extracción.")
+
     elif cmd == "ayuda":
-        print("Comandos: descargar [n], procesar [dir], entrenar [n], exportar [fp32/fp16], chat, salir")
+        print("Comandos: descargar [n], procesar [n], entrenar [n], exportar [fp32/fp16], chat, lista, limpiar_corpus, salir")
 
     else:
         print(f"Comando desconocido: {cmd}. Escribe 'ayuda' para ver opciones.")

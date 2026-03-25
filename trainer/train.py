@@ -67,7 +67,13 @@ def train_carl():
     model = CarlModel(config).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
 
-    # 4. Bucle de Entrenamiento
+    # 4. Cargar pesos previos si existen (Entrenamiento Incremental)
+    weights_path = "model/weights/carl_v0.1.pt"
+    if os.path.exists(weights_path):
+        print(f"Cargando cerebro previo de {weights_path} para seguir aprendiendo...")
+        model.load_state_dict(torch.load(weights_path, map_location=device))
+
+    # 5. Bucle de Entrenamiento
     model.train()
     for epoch in range(epochs):
         pbar = tqdm(loader, desc=f"Epoch {epoch+1}")

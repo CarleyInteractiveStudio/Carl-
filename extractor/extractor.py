@@ -78,20 +78,38 @@ class CarlDataExtractor:
             print(f"Error en {file_path}: {e}")
             return ""
 
-    def process_directory(self, input_dir):
+    def process_directory(self, input_dir, limit=None):
         files = [f for f in os.listdir(input_dir) if f.endswith('.txt')]
         all_text = ""
+        processed_count = 0
+        skipped_count = 0
+
         for file in files:
             path = os.path.join(input_dir, file)
-            if self.registry.is_processed(path): continue
+
+            # Verificar si ya se procesó
+            if self.registry.is_processed(path):
+                skipped_count += 1
+                continue
+
+            if limit is not None and processed_count >= limit:
+                break
+
             text = self.extract_from_txt(path)
             if text:
                 all_text += text + "\n\n"
                 self.registry.add_processed(path)
+                processed_count += 1
 
-        with open(os.path.join(self.output_dir, "corpus_entrenamiento.txt"), "a", encoding="utf-8") as f:
-            f.write(all_text)
-        print("Procesamiento completado y limpio.")
+        if processed_count > 0:
+            with open(os.path.join(self.output_dir, "corpus_entrenamiento.txt"), "a", encoding="utf-8") as f:
+                f.write(all_text)
+
+        print(f"Procesamiento finalizado:")
+        print(f" - Libros nuevos añadidos: {processed_count}")
+        print(f" - Libros ya procesados (omitidos): {skipped_count}")
+        if limit and processed_count >= limit:
+            print(f" - Se detuvo al alcanzar el límite de {limit} libros.")
 
 if __name__ == "__main__":
     import sys

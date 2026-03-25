@@ -9,13 +9,18 @@ class CarlRegistry:
         self.data = self._load()
 
     def _load(self):
+        default = {"downloaded_ids": [], "processed_files": []}
         if os.path.exists(self.registry_file):
             try:
                 with open(self.registry_file, 'r', encoding='utf-8') as f:
-                    return json.load(f)
+                    data = json.load(f)
+                    # Asegurar que las llaves existan
+                    for key in default:
+                        if key not in data: data[key] = []
+                    return data
             except:
-                return {"downloaded_ids": [], "processed_files": []}
-        return {"downloaded_ids": [], "processed_files": []}
+                return default
+        return default
 
     def save(self):
         os.makedirs(os.path.dirname(self.registry_file), exist_ok=True)
