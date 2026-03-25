@@ -1,7 +1,13 @@
 # Carl IA (Proyecto Carl)
 ## Modelo de Lenguaje de Propósito General (.ccia)
 
-Carl es una IA construida desde cero, utilizando una arquitectura Transformer y un motor de inferencia propio escrito en C++.
+Carl es una Inteligencia Artificial construida **100% desde cero**.
+
+### Originalidad de Carl
+- **Sin Modelos Base:** Carl NO utiliza GPT-2, Llama, Mistral ni ningún otro modelo pre-entrenado. El cerebro ha sido programado neurona por neurona en este repositorio.
+- **Arquitectura Propia:** Implementación manual de capas Transformer Multimodales en PyTorch.
+- **Vocabulario Único:** Tokenizador BPE programado desde cero que entrena un vocabulario basado exclusivamente en tus libros.
+- **Motor C++ Independiente:** Motor de inferencia escrito en C++17 sin dependencias de frameworks de terceros.
 
 ### Estructura del Proyecto
 - `extractor/`: Herramientas para extraer texto de PDF, EPUB, DOCX, etc.
