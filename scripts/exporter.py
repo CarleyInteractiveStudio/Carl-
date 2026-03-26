@@ -68,13 +68,39 @@ def export_to_ccia(pt_model_path, config, output_path, quantization="fp32"):
     print(f"Modelo exportado exitosamente a {output_path} en formato {quantization}")
 
 if __name__ == "__main__":
+    # Intentamos detectar el tamaño del vocabulario desde el archivo de pesos
+    pt_path = "model/weights/carl_v0.1.pt"
+    v_size = 10000
+    b_size = 64
+
+    if os.path.exists(pt_path):
+        sd = torch.load(pt_path, map_location="cpu")
+        if "transformer.wte.weight" in sd:
+            v_size = sd["transformer.wte.weight"].shape[0]
+        if "transformer.wpe.weight" in sd:
+            b_size = sd["transformer.wpe.weight"].shape[0]
+
+    # Intentamos detectar la dimensión de embedding
+    e_dim = 512
+    n_lay = 12
+    if os.path.exists(pt_path):
+        if "transformer.wte.weight" in sd:
+            e_dim = sd["transformer.wte.weight"].shape[1]
+        # Contar capas h.X.
+        layers = set()
+        for k in sd.keys():
+            if k.startswith("transformer.h."):
+                layers.add(k.split(".")[2])
+        if layers:
+            n_lay = len(layers)
+
     # Cargar config real usada en el entrenamiento
     config = CarlConfig(
-        vocab_size=5000,
-        n_embd=256,
+        vocab_size=v_size,
+        n_embd=e_dim,
         n_head=8,
-        n_layer=6,
-        block_size=32
+        n_layer=n_lay,
+        block_size=b_size
     )
 
     os.makedirs("weights", exist_ok=True)

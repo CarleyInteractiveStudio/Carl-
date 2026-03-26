@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import math
-from model.native_ops import carl_matmul
+from model.native_ops import carl_matmul, carl_gelu, carl_layernorm
 
 class CarlConfig:
     def __init__(self, vocab_size=10000, n_embd=256, n_head=8, n_layer=12, block_size=256):
@@ -31,42 +31,52 @@ class MultiHeadAttention(nn.Module):
         v = self.value(x).view(B, T, self.n_head, C // self.n_head).transpose(1, 2)
 
         # Usamos los músculos de C++ para la multiplicación de atención
-        # reshaped para 2D si es necesario o directo si el autograd lo permite
-        att = carl_matmul(q.reshape(-1, C // self.n_head), k.transpose(-2, -1).reshape(C // self.n_head, -1))
-        att = att.reshape(B, self.n_head, T, T)
+        # q: [B, n_head, T, head_dim] -> [B * n_head * T, head_dim]
+        # k: [B, n_head, T, head_dim] -> [B * n_head * head_dim, T]
+        q_flat = q.reshape(-1, C // self.n_head)
+        k_flat = k.transpose(-2, -1).reshape(C // self.n_head, -1)
+
+        # El matmul nativo de Carl espera (M, K) * (K, N)
+        # Para que sea compatible con multi-head, operamos head por head o aplanamos todo
+        att = q @ k.transpose(-2, -1) # Devolvemos a estandar para estabilidad en esta version
         att = att * (1.0 / math.sqrt(k.size(-1)))
 
         att = att.masked_fill(self.mask[:, :, :T, :T] == 0, float('-inf'))
         att = F.softmax(att, dim=-1)
 
-        y = carl_matmul(att.reshape(-1, T), v.reshape(T, -1))
-        y = y.reshape(B, self.n_head, T, C // self.n_head)
+        y = att @ v
         y = y.transpose(1, 2).contiguous().view(B, T, C)
         return self.proj(y)
 
 class FeedForward(nn.Module):
     def __init__(self, config):
         super().__init__()
-        self.net = nn.Sequential(
-            nn.Linear(config.n_embd, 4 * config.n_embd),
-            nn.GELU(),
-            nn.Linear(4 * config.n_embd, config.n_embd),
-        )
+        self.w1 = nn.Linear(config.n_embd, 4 * config.n_embd)
+        self.w2 = nn.Linear(4 * config.n_embd, config.n_embd)
 
     def forward(self, x):
-        return self.net(x)
+        # El Cerebro de Carl maneja la musculatura de activación
+        x = self.w1(x)
+        x = carl_gelu(x)
+        x = self.w2(x)
+        return x
 
 class Block(nn.Module):
     def __init__(self, config):
         super().__init__()
-        self.ln1 = nn.LayerNorm(config.n_embd)
+        self.ln1_w = nn.Parameter(torch.ones(config.n_embd))
+        self.ln1_b = nn.Parameter(torch.zeros(config.n_embd))
         self.attn = MultiHeadAttention(config)
-        self.ln2 = nn.LayerNorm(config.n_embd)
+        self.ln2_w = nn.Parameter(torch.ones(config.n_embd))
+        self.ln2_b = nn.Parameter(torch.zeros(config.n_embd))
         self.ff = FeedForward(config)
 
     def forward(self, x):
-        x = x + self.attn(self.ln1(x))
-        x = x + self.ff(self.ln2(x))
+        # Usamos el Cerebro Neuronal (C++) para estabilizar el aprendizaje
+        norm1 = carl_layernorm(x, self.ln1_w, self.ln1_b)
+        x = x + self.attn(norm1)
+        norm2 = carl_layernorm(x, self.ln2_w, self.ln2_b)
+        x = x + self.ff(norm2)
         return x
 
 class CarlModel(nn.Module):
@@ -80,8 +90,9 @@ class CarlModel(nn.Module):
             # Puente de visión: Convierte parches de imagen 16x16 (3 canales) en el espacio de Carl
             vision_proj = nn.Linear(16 * 16 * 3, config.n_embd),
             h = nn.ModuleList([Block(config) for _ in range(config.n_layer)]),
-            ln_f = nn.LayerNorm(config.n_embd),
         ))
+        self.ln_f_w = nn.Parameter(torch.ones(config.n_embd))
+        self.ln_f_b = nn.Parameter(torch.zeros(config.n_embd))
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
 
     def forward(self, idx, targets=None, image_patches=None):
@@ -104,7 +115,7 @@ class CarlModel(nn.Module):
         for block in self.transformer.h:
             x = block(x)
 
-        x = self.transformer.ln_f(x)
+        x = carl_layernorm(x, self.ln_f_w, self.ln_f_b)
         logits = self.lm_head(x)
 
         loss = None

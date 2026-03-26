@@ -19,19 +19,20 @@ Kaggle usa Linux. Para compilar las conexiones neuronales de Carl allí:
 !cd engine/build && cmake .. && make
 ```
 
-### 4. Ejecutar el Entrenamiento
-Usa la consola de Carl directamente desde el Notebook:
+### 4. Ejecutar el Entrenamiento (Optimizado para 30GB RAM / 15GB VRAM)
+He configurado a Carl para aprovechar tus **30 núcleos de procesador** y **15GB de VRAM**. Usa la consola:
 ```python
 import os
 os.environ['PYTHONPATH'] = "."
 !python carl_cli.py <<EOF
 descargar 6000
 procesar
-entrenar 10
+entrenar 20
 exportar fp16
 salir
 EOF
 ```
+*Tip: Con 15GB de VRAM, Carl ahora tiene 12 capas de profundidad y un contexto de 256 tokens, lo que lo hace mucho más inteligente.*
 
 ### 5. Descargar los Pesos
 Al finalizar, encontrarás el archivo `weights/carl_v0.1.ccia` en la carpeta `/kaggle/working/`. ¡Descárgalo y llévatelo a tu PC!

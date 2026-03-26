@@ -23,11 +23,11 @@ class CarlDataset(Dataset):
         return x, y
 
 def train_carl():
-    # Configuración optimizada para 16GB RAM / 2GB VRAM
+    # Configuración optimizada para KAGGLE (30GB RAM / 15GB VRAM)
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    block_size = 64 # Aumentamos contexto
-    batch_size = 8  # Ajustado para 2GB VRAM
-    vocab_size = 10000 # Vocabulario completo
+    block_size = 128 # Contexto más amplio pero seguro
+    batch_size = 16  # Ajustado para estabilidad
+    vocab_size = 15000 # Vocabulario más rico
     learning_rate = 3e-4
     epochs = 1
 
@@ -56,12 +56,12 @@ def train_carl():
     print(f"Dataset length: {len(dataset)}")
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-    # 3. Inicializar Modelo (Optimizado para 13GB RAM disponible)
+    # 3. Inicializar Modelo (Cerebro Neuronal Profundo)
     config = CarlConfig(
         vocab_size=vocab_size,
-        n_embd=256,
+        n_embd=512,  # Potencia total para Kaggle
         n_head=8,
-        n_layer=6,
+        n_layer=12,  # 12 Capas de inteligencia
         block_size=block_size
     )
     model = CarlModel(config).to(device)

@@ -15,23 +15,32 @@ def run_carl_chat(pt_weights="model/weights/carl_v0.1.pt", vocab_path="tokenizer
     tokenizer = CarlTokenizer()
     tokenizer.load(vocab_path)
 
-    # 3. Cargar Arquitectura (Debe coincidir con la usada en el entrenamiento)
+    # 3. Cargar Pesos y detectar Arquitectura automáticamente
+    if not os.path.exists(pt_weights):
+        print(f"Error: No se encontraron pesos en {pt_weights}.")
+        return
+
+    sd = torch.load(pt_weights, map_location=device)
+    v_size = sd["transformer.wte.weight"].shape[0]
+    e_dim = sd["transformer.wte.weight"].shape[1]
+    b_size = sd["transformer.wpe.weight"].shape[0]
+    layers = set()
+    for k in sd.keys():
+        if k.startswith("transformer.h."):
+            layers.add(k.split(".")[2])
+    n_lay = len(layers)
+
     config = CarlConfig(
-        vocab_size=10000,
-        n_embd=256,
+        vocab_size=v_size,
+        n_embd=e_dim,
         n_head=8,
-        n_layer=6,
-        block_size=64
+        n_layer=n_lay,
+        block_size=b_size
     )
 
     model = CarlModel(config).to(device)
-
-    # 4. Cargar Pesos
-    if os.path.exists(pt_weights):
-        model.load_state_dict(torch.load(pt_weights, map_location=device))
-        print(f"Pesos de Carl cargados desde {pt_weights}")
-    else:
-        print(f"Aviso: No se encontraron pesos en {pt_weights}. Carl está usando un cerebro vacío (azar).")
+    model.load_state_dict(sd)
+    print(f"Pesos de Carl ({n_lay} capas) cargados exitosamente.")
 
     model.eval()
 
