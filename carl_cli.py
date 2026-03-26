@@ -28,8 +28,8 @@ def run_command(command_str):
         print(f"Iniciando entrenamiento por {epochs} épocas...")
         train_carl()
 
-    elif cmd == "entrenar_cpp":
-        print("Compilando y ejecutando entrenador de alto rendimiento (C++)...")
+    elif cmd == "entrenar_neuronal":
+        print("Compilando y activando el Cerebro Neuronal de Carl (C++)...")
         os.system("mkdir -p engine/build && cd engine/build && cmake .. && make && ./carl_trainer")
 
     elif cmd == "exportar":
@@ -56,7 +56,7 @@ def run_command(command_str):
             print("Corpus de entrenamiento eliminado. Listo para una nueva extracción.")
 
     elif cmd == "ayuda":
-        print("Comandos: descargar [n], procesar [n], entrenar [n], entrenar_cpp, exportar [fp32/fp16], chat, lista, limpiar_corpus, salir")
+        print("Comandos: descargar [n], procesar [n], entrenar [n], entrenar_neuronal, exportar [fp32/fp16], chat, lista, limpiar_corpus, salir")
 
     else:
         print(f"Comando desconocido: {cmd}. Escribe 'ayuda' para ver opciones.")

@@ -6,16 +6,16 @@ set(CMAKE_CXX_STANDARD 17)
 # Incluir directorios
 include_directories(include)
 
-# Crear librería compartida para que Python pueda usar los músculos C++
-add_library(carl_math SHARED src/carl_math.cpp)
+# El Cerebro de Carl: Librería compartida para Python
+add_library(carl_neuronal SHARED src/carl_neuronal.cpp)
 
-# Definir ejecutable (las rutas deben ser relativas al CMakeLists.txt)
+# Motor de Inferencia Principal
 add_executable(carl_engine src/main.cpp)
-target_link_libraries(carl_engine carl_math)
+target_link_libraries(carl_engine carl_neuronal)
 
-# Definir entrenador C++
+# Motor de Entrenamiento de Alto Rendimiento
 add_executable(carl_trainer src/trainer.cpp)
-target_link_libraries(carl_trainer carl_math)
+target_link_libraries(carl_trainer carl_neuronal)
 
 # (Opcional) Agregar soporte para OpenBLAS/Eigen si el usuario lo solicita explícitamente más adelante
 # target_link_libraries(carl_engine ...)

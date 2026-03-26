@@ -12,8 +12,8 @@ Puedes subir los archivos directamente o clonarlos. En la primera celda, instala
 !pip install requests tqdm pypdf python-docx ebooklib beautifulsoup4 numpy torch
 ```
 
-### 3. Usar los Músculos C++ (Velocidad Extra)
-Kaggle usa Linux. Para compilar el motor de Carl allí:
+### 3. Usar el Cerebro Neuronal (C++ / Velocidad Extra)
+Kaggle usa Linux. Para compilar las conexiones neuronales de Carl allí:
 ```python
 !mkdir -p engine/build
 !cd engine/build && cmake .. && make

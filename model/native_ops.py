@@ -4,21 +4,21 @@ import os
 import torch
 import torch.nn as nn
 
-# Cargar los "Músculos" de Carl en C++
-lib_path = "./engine/build/libcarl_math.so"
+# Cargar el Cerebro de Carl (Motor C++)
+lib_path = "./engine/build/libcarl_neuronal.so"
 if os.path.exists(lib_path):
     carl_lib = ctypes.CDLL(lib_path)
-    # Configurar matmul
-    carl_lib.native_matmul.argtypes = [
+    # Configurar Conexiones Neuronales
+    carl_lib.cerebro_matmul.argtypes = [
         ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float),
         ctypes.c_int, ctypes.c_int, ctypes.c_int
     ]
 else:
     carl_lib = None
-    print("Aviso: Librería carl_math no encontrada. Usando modo simulación en Python.")
+    print("Aviso: Cerebro Neuronal (C++) no encontrado. Usando modo simulación en Python.")
 
-class CarlNativeMatmul(torch.autograd.Function):
-    """Capa de enlace entre el cerebro de Python y los músculos de C++."""
+class CarlNeuronalOps(torch.autograd.Function):
+    """Capa de enlace entre el director de orquesta (Python) y el Cerebro de Carl (C++)."""
 
     @staticmethod
     def forward(ctx, a, b):
@@ -29,8 +29,8 @@ class CarlNativeMatmul(torch.autograd.Function):
         K2, N = b.shape
         c = torch.zeros((M, N), device=a.device)
 
-        # Llamar a C++
-        carl_lib.native_matmul(
+        # Llamar al Cerebro en C++
+        carl_lib.cerebro_matmul(
             a.contiguous().data_ptr(),
             b.contiguous().data_ptr(),
             c.data_ptr(),
@@ -56,4 +56,4 @@ class CarlNativeMatmul(torch.autograd.Function):
         return grad_a, grad_b
 
 def carl_matmul(a, b):
-    return CarlNativeMatmul.apply(a, b)
+    return CarlNeuronalOps.apply(a, b)

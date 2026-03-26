@@ -7,7 +7,7 @@ Carl es una Inteligencia Artificial construida **100% desde cero**.
 - **Sin Modelos Base:** Carl NO utiliza GPT-2, Llama, Mistral ni ningún otro modelo pre-entrenado. El cerebro ha sido programado neurona por neurona en este repositorio.
 - **Arquitectura Propia:** Implementación manual de capas Transformer Multimodales en PyTorch.
 - **Vocabulario Único:** Tokenizador BPE programado desde cero que entrena un vocabulario basado exclusivamente en tus libros.
-- **Motor C++ Independiente:** Motor de inferencia escrito en C++17 sin dependencias de frameworks de terceros.
+- **Cerebro Neuronal Propio:** Motor de inferencia y entrenamiento escrito en C++17 que maneja las conexiones matemáticas de Carl.
 
 ### Estructura del Proyecto
 - `extractor/`: Herramientas para extraer texto de PDF, EPUB, DOCX, etc.
