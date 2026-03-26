@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import math
+from model.native_ops import carl_matmul
 
 class CarlConfig:
     def __init__(self, vocab_size=10000, n_embd=256, n_head=8, n_layer=12, block_size=256):
@@ -29,10 +30,17 @@ class MultiHeadAttention(nn.Module):
         q = self.query(x).view(B, T, self.n_head, C // self.n_head).transpose(1, 2)
         v = self.value(x).view(B, T, self.n_head, C // self.n_head).transpose(1, 2)
 
-        att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
+        # Usamos los músculos de C++ para la multiplicación de atención
+        # reshaped para 2D si es necesario o directo si el autograd lo permite
+        att = carl_matmul(q.reshape(-1, C // self.n_head), k.transpose(-2, -1).reshape(C // self.n_head, -1))
+        att = att.reshape(B, self.n_head, T, T)
+        att = att * (1.0 / math.sqrt(k.size(-1)))
+
         att = att.masked_fill(self.mask[:, :, :T, :T] == 0, float('-inf'))
         att = F.softmax(att, dim=-1)
-        y = att @ v
+
+        y = carl_matmul(att.reshape(-1, T), v.reshape(T, -1))
+        y = y.reshape(B, self.n_head, T, C // self.n_head)
         y = y.transpose(1, 2).contiguous().view(B, T, C)
         return self.proj(y)
 

@@ -28,6 +28,10 @@ def run_command(command_str):
         print(f"Iniciando entrenamiento por {epochs} épocas...")
         train_carl()
 
+    elif cmd == "entrenar_cpp":
+        print("Compilando y ejecutando entrenador de alto rendimiento (C++)...")
+        os.system("mkdir -p engine/build && cd engine/build && cmake .. && make && ./carl_trainer")
+
     elif cmd == "exportar":
         precision = parts[1] if len(parts) > 1 else "fp32"
         config = CarlConfig(vocab_size=10000, n_embd=256, n_head=8, n_layer=6, block_size=64)
@@ -52,7 +56,7 @@ def run_command(command_str):
             print("Corpus de entrenamiento eliminado. Listo para una nueva extracción.")
 
     elif cmd == "ayuda":
-        print("Comandos: descargar [n], procesar [n], entrenar [n], exportar [fp32/fp16], chat, lista, limpiar_corpus, salir")
+        print("Comandos: descargar [n], procesar [n], entrenar [n], entrenar_cpp, exportar [fp32/fp16], chat, lista, limpiar_corpus, salir")
 
     else:
         print(f"Comando desconocido: {cmd}. Escribe 'ayuda' para ver opciones.")
