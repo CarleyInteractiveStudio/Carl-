@@ -15,4 +15,16 @@ void hippocampus_consolidate(CerebralNetwork *net);
 // The Basal Ganglia processes rewards and updates dopamine
 void basal_ganglia_update(CerebralNetwork *net, float reward_signal);
 
+// The Locus Coeruleus triggers Noradrenaline on novelty
+void locus_coeruleus_update(CerebralNetwork *net, bool novelty_detected);
+
+// The ACC detects conflict between firing neurons
+float acc_detect_conflict(CerebralNetwork *net, uint32_t *neuron_ids, uint32_t count);
+
+// Association Cortex connects concepts spontaneously
+void association_cortex_connect(CerebralNetwork *net, uint32_t nid_a, uint32_t nid_b, float initial_weight);
+
+// Thalamus gates sensory input
+float thalamus_gate_input(CerebralNetwork *net, float raw_input, float attention_signal);
+
 #endif

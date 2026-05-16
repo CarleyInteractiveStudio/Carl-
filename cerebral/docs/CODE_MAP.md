@@ -14,8 +14,12 @@ Este documento detalla la ubicación de cada componente lógico del motor.
 - **Archivo:** `cerebral/src/modules/brain_modules.c`
   - `pfc_process` (Línea 4): Lógica de atención de la Corteza Prefrontal.
   - `basal_ganglia_update` (Línea 15): Gestión de recompensas y dopamina.
-  - `reflex_trigger` (Línea 27): Sistema de instintos/reflejos.
-  - `hippocampus_consolidate` (Línea 34): Consolidación de memoria.
+  - `locus_coeruleus_update` (Línea 27): Noradrenalina y alerta ante novedad.
+  - `acc_detect_conflict` (Línea 41): Detección de conflicto neural e incertidumbre.
+  - `association_cortex_connect` (Línea 59): Creación de conexiones espontáneas.
+  - `thalamus_gate_input` (Línea 71): Filtrado sensorial por atención.
+  - `reflex_trigger` (Línea 77): Sistema de instintos/reflejos.
+  - `hippocampus_consolidate` (Línea 84): Consolidación de memoria.
 
 ## 3. Modelo del Mundo y Senses
 - **Archivo:** `cerebral/src/modules/world_model.c`

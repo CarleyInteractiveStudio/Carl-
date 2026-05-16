@@ -16,6 +16,7 @@ CerebralNetwork* cerebral_init(uint32_t neuron_count) {
     net->total_neurons = neuron_count;
     net->current_time = 0.0;
     net->global_dopamine = 0.5f;
+    net->global_noradrenaline = 0.5f;
 
     return net;
 }
@@ -26,7 +27,10 @@ void cerebral_tick(CerebralNetwork *net) {
     // 1. Update membrane potentials and check for spikes
     for (uint32_t i = 0; i < net->total_neurons; i++) {
         Neuron *n = &net->neurons[i];
-        n->membrane_potential -= n->membrane_potential * LEAK_FACTOR * TIME_STEP;
+
+        // Noradrenaline reduces the "leak", making neurons more excitable (alert)
+        float current_leak = LEAK_FACTOR * (1.1f - net->global_noradrenaline);
+        n->membrane_potential -= n->membrane_potential * current_leak * TIME_STEP;
 
         if (n->membrane_potential >= SPIKE_THRESHOLD) {
             n->has_spiked = true;
@@ -73,7 +77,9 @@ void cerebral_tick(CerebralNetwork *net) {
                         // LTP: Source fired BEFORE Post.
                         float dt = (float)net->current_time - source->last_spike_time;
                         if (dt > 0 && dt < 10.0f) {
-                            s->weight += 0.02f * net->global_dopamine;
+                            // Noradrenaline also accelerates synaptic plastic changes
+                            float learning_rate = 0.02f * net->global_dopamine * (0.5f + net->global_noradrenaline);
+                            s->weight += learning_rate;
                         }
                     }
                 }

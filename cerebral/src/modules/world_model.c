@@ -30,13 +30,20 @@ void world_model_add_concept(WorldModel *wm, uint32_t nid, const char *name) {
     wm->concept_count++;
 }
 
+#include "brain_modules.h"
+
 void world_model_perceive(CerebralNetwork *net, WorldModel *wm, const char *input) {
     if (!net || !wm || !input) return;
+    bool known = false;
     for (uint32_t i = 0; i < wm->concept_count; i++) {
         if (strncmp(wm->concepts[i].concept_name, input, 31) == 0) {
             cerebral_stimulate(net, wm->concepts[i].neuron_id, 1.2f);
+            known = true;
         }
     }
+
+    // Trigger Locus Coeruleus if the input is unknown (novelty)
+    locus_coeruleus_update(net, !known);
 }
 
 void world_model_free(WorldModel *wm) {
