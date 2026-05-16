@@ -103,6 +103,51 @@ void cerebral_sleep(CerebralNetwork *net) {
     net->trace_count = 0;
 }
 
+void hypothalamus_update(CerebralNetwork *net) {
+    if (!net) return;
+
+    // Aumenta el hambre de curiosidad con el tiempo si no hay noradrenalina (novedad)
+    if (net->global_noradrenaline < 0.3f) {
+        net->curiosity_drive += 0.001f;
+    } else {
+        net->curiosity_drive -= 0.01f;
+    }
+
+    // El hambre de coherencia aumenta si hay conflicto detectado por el ACC
+    // (Simulado aquí, pero se conectaría al output del acc_detect_conflict)
+
+    // Limitar drives
+    if (net->curiosity_drive > 1.0f) net->curiosity_drive = 1.0f;
+    if (net->curiosity_drive < 0.0f) net->curiosity_drive = 0.0f;
+
+    // La curiosidad alta aumenta la noradrenalina base (el motor busca estímulos)
+    if (net->curiosity_drive > 0.8f) {
+        net->global_noradrenaline += 0.01f;
+    }
+}
+
+void pfc_simulate_prospect(CerebralNetwork *net, uint32_t concept_nid) {
+    if (!net) return;
+
+    printf("[PFC] Imaginando futuro para concepto %u...\n", concept_nid);
+
+    // Entrar en modo simulación (off-line)
+    net->is_simulating = true;
+    float original_dopamine = net->global_dopamine;
+
+    // Estimular el concepto internamente
+    cerebral_stimulate(net, concept_nid, 1.2f);
+
+    // Dejar que la red se propague unos pasos
+    for (int i = 0; i < 5; i++) {
+        cerebral_tick(net);
+    }
+
+    // Salir de modo simulación
+    net->is_simulating = false;
+    net->global_dopamine = original_dopamine;
+}
+
 void reflex_trigger(CerebralNetwork *net, uint32_t input_id, uint32_t action_id) {
     // Reflexes are strong, direct connections
     if (net->neurons[input_id].has_spiked) {

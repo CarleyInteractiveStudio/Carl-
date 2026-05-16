@@ -29,6 +29,8 @@ El motor Cerebral se basa en principios establecidos de neurociencia y psicolog�
 5.  **STDP (Bi & Poo, 1998):** La plasticidad dependiente del tiempo de los impulsos es la base de nuestro aprendizaje Hebbiano ("Fire together, wire together").
 6. **Consolidación durante el Sueño (Walker, 2017):** El motor utiliza ciclos de sueño para re-procesar trazas de memoria (Memory Traces) y realizar poda sináptica (Synaptic Pruning), optimizando la memoria a largo plazo.
 7. **Procesamiento de Lenguaje (Friederici, 2011):** La distinción entre las áreas de Wernicke (comprensión/semántica) y Broca (producción/sintaxis) permite que el modelo separe el pensamiento interno de la comunicación externa.
+8. **Homeostasis y Drives (Damasio, 2010):** El motor no solo reacciona, sino que actúa motivado por necesidades internas (curiosidad, coherencia) gestionadas por el Hipotálamo.
+9. **Prospección / Imaginación (Buckner & Carroll, 2007):** La capacidad de simular escenarios futuros internamente permite al modelo evaluar consecuencias antes de la ejecución real.
 
 ## Cómo funciona el Tiempo Real
 El motor utiliza un paso de tiempo (`TIME_STEP`) de 0.1ms. En cada "tick", se calcula la fuga de energía de las neuronas (leak) y se propagan los impulsos a través de las sinapsis.

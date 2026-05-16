@@ -24,6 +24,9 @@ CerebralNetwork* cerebral_init(uint32_t neuron_count) {
     net->current_time = 0.0;
     net->global_dopamine = 0.5f;
     net->global_noradrenaline = 0.5f;
+    net->curiosity_drive = 0.5f;
+    net->coherence_drive = 0.5f;
+    net->is_simulating = false;
 
     return net;
 }
@@ -91,8 +94,10 @@ void cerebral_tick(CerebralNetwork *net) {
                         // LTP: Source fired BEFORE Post.
                         float dt = (float)net->current_time - source->last_spike_time;
                         if (dt > 0 && dt < 10.0f) {
+                            // In simulation mode, learning is temporary or reduced
+                            float scale = net->is_simulating ? 0.1f : 1.0f;
                             // Noradrenaline also accelerates synaptic plastic changes
-                            float learning_rate = 0.02f * net->global_dopamine * (0.5f + net->global_noradrenaline);
+                            float learning_rate = 0.02f * net->global_dopamine * (0.5f + net->global_noradrenaline) * scale;
                             s->weight += learning_rate;
                         }
                     }

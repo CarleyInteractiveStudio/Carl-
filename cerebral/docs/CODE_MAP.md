@@ -19,8 +19,10 @@ Este documento detalla la ubicación de cada componente lógico del motor.
   - `association_cortex_connect` (Línea 59): Creación de conexiones espontáneas.
   - `thalamus_gate_input` (Línea 71): Filtrado sensorial por atención.
   - `cerebral_sleep` (Línea 77): Ciclo de sueño, re-activación y poda.
-  - `reflex_trigger` (Línea 106): Sistema de instintos/reflejos.
-  - `hippocampus_consolidate` (Línea 113): Consolidación de memoria.
+  - `hypothalamus_update` (Línea 106): Gestión de necesidades biológicas (Drives).
+  - `pfc_simulate_prospect` (Línea 129): Imaginación y simulación mental.
+  - `reflex_trigger` (Línea 151): Sistema de instintos/reflejos.
+  - `hippocampus_consolidate` (Línea 158): Consolidación de memoria.
 
 ## 3. Lenguaje (Language Areas)
 - **Archivo:** `cerebral/src/modules/language_areas.c`

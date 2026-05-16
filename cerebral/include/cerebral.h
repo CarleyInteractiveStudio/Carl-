@@ -40,6 +40,12 @@ typedef struct {
 
     MemoryTrace *traces;
     uint32_t trace_count;
+
+    // Homeostatic Drives (Hypothalamus)
+    float curiosity_drive; // Need for new information
+    float coherence_drive; // Need for internal consistency
+
+    bool is_simulating;    // If true, the engine is in "Prospection Mode"
 } CerebralNetwork;
 
 // Core functions

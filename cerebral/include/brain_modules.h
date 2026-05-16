@@ -30,4 +30,10 @@ float thalamus_gate_input(CerebralNetwork *net, float raw_input, float attention
 // Sleep cycles consolidate memories and prune synapses
 void cerebral_sleep(CerebralNetwork *net);
 
+// Hypothalamus manages internal needs (Homeostasis)
+void hypothalamus_update(CerebralNetwork *net);
+
+// PFC triggers mental simulation of a concept
+void pfc_simulate_prospect(CerebralNetwork *net, uint32_t concept_nid);
+
 #endif
