@@ -7,6 +7,7 @@
 /* Global configuration for the Cerebral Engine */
 #define MAX_NEURONS 1000
 #define MAX_SYNAPSES_PER_NEURON 100
+#define MAX_MEMORY_TRACES 1000
 #define TIME_STEP 0.1f // ms
 #define SPIKE_THRESHOLD 1.0f
 #define LEAK_FACTOR 0.1f
@@ -26,11 +27,19 @@ typedef struct {
 } Neuron;
 
 typedef struct {
+    uint32_t neuron_id;
+    float timestamp;
+} MemoryTrace;
+
+typedef struct {
     Neuron *neurons;
     uint32_t total_neurons;
     double current_time;
     float global_dopamine;     // Reward/Motivation (LTP boost)
     float global_noradrenaline; // Alertness/Novelty (Excitability/Learning speed)
+
+    MemoryTrace *traces;
+    uint32_t trace_count;
 } CerebralNetwork;
 
 // Core functions

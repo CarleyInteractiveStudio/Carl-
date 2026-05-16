@@ -13,6 +13,13 @@ CerebralNetwork* cerebral_init(uint32_t neuron_count) {
         return NULL;
     }
 
+    net->traces = (MemoryTrace*)calloc(MAX_MEMORY_TRACES, sizeof(MemoryTrace));
+    if (!net->traces) {
+        free(net->neurons);
+        free(net);
+        return NULL;
+    }
+
     net->total_neurons = neuron_count;
     net->current_time = 0.0;
     net->global_dopamine = 0.5f;
@@ -36,6 +43,13 @@ void cerebral_tick(CerebralNetwork *net) {
             n->has_spiked = true;
             n->last_spike_time = (float)net->current_time;
             n->membrane_potential = 0;
+
+            // Record memory trace
+            if (net->trace_count < MAX_MEMORY_TRACES) {
+                net->traces[net->trace_count].neuron_id = i;
+                net->traces[net->trace_count].timestamp = (float)net->current_time;
+                net->trace_count++;
+            }
         } else {
             n->has_spiked = false;
         }
@@ -98,6 +112,7 @@ void cerebral_stimulate(CerebralNetwork *net, uint32_t neuron_id, float current)
 void cerebral_free(CerebralNetwork *net) {
     if (net) {
         if (net->neurons) free(net->neurons);
+        if (net->traces) free(net->traces);
         free(net);
     }
 }

@@ -18,8 +18,14 @@ Este documento detalla la ubicación de cada componente lógico del motor.
   - `acc_detect_conflict` (Línea 41): Detección de conflicto neural e incertidumbre.
   - `association_cortex_connect` (Línea 59): Creación de conexiones espontáneas.
   - `thalamus_gate_input` (Línea 71): Filtrado sensorial por atención.
-  - `reflex_trigger` (Línea 77): Sistema de instintos/reflejos.
-  - `hippocampus_consolidate` (Línea 84): Consolidación de memoria.
+  - `cerebral_sleep` (Línea 77): Ciclo de sueño, re-activación y poda.
+  - `reflex_trigger` (Línea 106): Sistema de instintos/reflejos.
+  - `hippocampus_consolidate` (Línea 113): Consolidación de memoria.
+
+## 3. Lenguaje (Language Areas)
+- **Archivo:** `cerebral/src/modules/language_areas.c`
+  - `wernicke_process`: Comprensión semántica.
+  - `broca_generate`: Planificación y producción del habla.
 
 ## 3. Modelo del Mundo y Senses
 - **Archivo:** `cerebral/src/modules/world_model.c`

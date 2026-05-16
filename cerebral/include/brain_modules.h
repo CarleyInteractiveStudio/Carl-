@@ -27,4 +27,7 @@ void association_cortex_connect(CerebralNetwork *net, uint32_t nid_a, uint32_t n
 // Thalamus gates sensory input
 float thalamus_gate_input(CerebralNetwork *net, float raw_input, float attention_signal);
 
+// Sleep cycles consolidate memories and prune synapses
+void cerebral_sleep(CerebralNetwork *net);
+
 #endif

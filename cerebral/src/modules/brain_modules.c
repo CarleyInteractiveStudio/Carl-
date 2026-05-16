@@ -74,6 +74,35 @@ float thalamus_gate_input(CerebralNetwork *net, float raw_input, float attention
     return raw_input * (0.2f + 0.8f * attention_signal);
 }
 
+void cerebral_sleep(CerebralNetwork *net) {
+    if (!net || net->trace_count == 0) return;
+
+    printf("[SUEÑO] Iniciando consolidación de %u trazas...\n", net->trace_count);
+
+    // 1. Replay: Re-activar trazas de memoria para fortalecer sinapsis activas recientemente
+    // En un cerebro real esto ocurre en ráfagas (sharp-wave ripples)
+    for (uint32_t i = 0; i < net->trace_count; i++) {
+        cerebral_stimulate(net, net->traces[i].neuron_id, 0.5f);
+        cerebral_tick(net);
+    }
+
+    // 2. Pruning: Eliminar sinapsis muy débiles o irrelevantes para optimizar recursos
+    for (uint32_t i = 0; i < net->total_neurons; i++) {
+        Neuron *n = &net->neurons[i];
+        for (uint32_t j = 0; j < n->synapse_count; j++) {
+            if (n->synapses[j].weight < 0.01f && n->synapses[j].weight > -0.01f) {
+                // Mover la última sinapsis a esta posición para "eliminar" la débil
+                n->synapses[j] = n->synapses[n->synapse_count - 1];
+                n->synapse_count--;
+                j--;
+            }
+        }
+    }
+
+    // 3. Resetear trazas para el próximo día/ciclo
+    net->trace_count = 0;
+}
+
 void reflex_trigger(CerebralNetwork *net, uint32_t input_id, uint32_t action_id) {
     // Reflexes are strong, direct connections
     if (net->neurons[input_id].has_spiked) {
