@@ -12,4 +12,7 @@ void reflex_trigger(CerebralNetwork *net, uint32_t input_id, uint32_t action_id)
 // The Hippocampus manages memory consolidation
 void hippocampus_consolidate(CerebralNetwork *net);
 
+// The Basal Ganglia processes rewards and updates dopamine
+void basal_ganglia_update(CerebralNetwork *net, float reward_signal);
+
 #endif

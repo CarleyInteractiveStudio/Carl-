@@ -12,6 +12,18 @@ void pfc_process(CerebralNetwork *net, uint32_t *active_goal_neurons, uint32_t c
     }
 }
 
+void basal_ganglia_update(CerebralNetwork *net, float reward_signal) {
+    if (!net) return;
+
+    // Reward signal (0.0 to 1.0) slowly shifts the global dopamine level
+    // This simulates "learning from experience"
+    float alpha = 0.1f; // Learning rate for dopamine
+    net->global_dopamine = (1.0f - alpha) * net->global_dopamine + alpha * reward_signal;
+
+    // Decay dopamine over time towards a neutral state (0.5)
+    net->global_dopamine = 0.99f * net->global_dopamine + 0.01f * 0.5f;
+}
+
 void reflex_trigger(CerebralNetwork *net, uint32_t input_id, uint32_t action_id) {
     // Reflexes are strong, direct connections
     if (net->neurons[input_id].has_spiked) {

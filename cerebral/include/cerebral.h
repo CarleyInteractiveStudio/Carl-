@@ -29,6 +29,7 @@ typedef struct {
     Neuron *neurons;
     uint32_t total_neurons;
     double current_time;
+    float global_dopamine; // 0.0 to 1.0, scales learning rate
 } CerebralNetwork;
 
 // Core functions

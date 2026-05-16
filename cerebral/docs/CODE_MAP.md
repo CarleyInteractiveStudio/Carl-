@@ -13,8 +13,9 @@ Este documento detalla la ubicación de cada componente lógico del motor.
 ## 2. Áreas Cerebrales (Brain Modules)
 - **Archivo:** `cerebral/src/modules/brain_modules.c`
   - `pfc_process` (Línea 4): Lógica de atención de la Corteza Prefrontal.
-  - `reflex_trigger` (Línea 14): Sistema de instintos/reflejos.
-  - `hippocampus_consolidate` (Línea 21): Consolidación de memoria.
+  - `basal_ganglia_update` (Línea 15): Gestión de recompensas y dopamina.
+  - `reflex_trigger` (Línea 27): Sistema de instintos/reflejos.
+  - `hippocampus_consolidate` (Línea 34): Consolidación de memoria.
 
 ## 3. Modelo del Mundo y Senses
 - **Archivo:** `cerebral/src/modules/world_model.c`
@@ -22,5 +23,6 @@ Este documento detalla la ubicación de cada componente lógico del motor.
   - `world_model_perceive`: Convierte texto en impulsos eléctricos.
 
 ## 4. Pruebas y Verificación
+- **Archivo:** `cerebral/src/main.c`: Ejemplo principal de aprendizaje en tiempo real.
 - **Archivo:** `cerebral/tests/test_core.c`
   - `test_neuron_spike`: Verifica que la propagación de impulsos funcione correctamente.
