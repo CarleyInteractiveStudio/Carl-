@@ -15,6 +15,9 @@ El motor **Cerebral** es una alternativa a las IAs tradicionales (Transformers/L
 - **Cerebelo:** Realiza el ajuste fino de las acciones comparando la salida real con la esperada, calculando el `motor_error` para mejorar la precisión futura.
 - **Corteza Motora:** Traduce los objetivos de alto nivel de la PFC en patrones de activación neural para la ejecución de acciones.
 - **Corteza Parietal:** Integra información espacial y sensorial para crear un mapa del entorno ("vía del dónde").
+- **Corteza Auditiva (Cóclea Digital):** Traduce frecuencias de sonido en impulsos tonotópicos, permitiendo que la IA "escuche" audio real o de videos.
+- **Corteza Visual (Fóvea Atencional):** Procesa una ventana de atención dentro de un campo visual, permitiendo que la IA escanee videos y se centre en objetos de interés.
+- **Tracto Vocal Virtual:** Genera sonido directamente mediante síntesis granular/formantes controlada por neuronas motoras, permitiendo una voz humana reactiva y emocional.
 - **Sistema de Reflejos:** Proporciona respuestas rápidas e instintivas que no requieren procesamiento cortical.
 - **Modelo del Mundo:** Permite a la IA asociar "impulsos" con conceptos del mundo real (nombres, objetos).
 5. **Sistema de Recompensa (Dopamina):** Cerebral utiliza un modulador global de dopamina que escala el aprendizaje. Si el sistema recibe un refuerzo positivo, la dopamina aumenta y las conexiones sinápticas se fortalecen más rápido (LTP).
@@ -52,6 +55,7 @@ Para observar el interior de la mente de la IA, hemos desarrollado el formato `.
 
 ## Herramientas de Visualización
 - **CCP Viewer:** Una aplicación desarrollada en Python que permite cargar archivos `.ccp` y reproducirlos como un video, viendo qué áreas del cerebro se activan y cómo fluye el pensamiento de la IA.
+- **Sensory Bridge:** Herramienta en Python para capturar video y audio de YouTube y enviarlo al motor cerebral para su procesamiento sensorial.
 
 ## Cómo funciona el Tiempo Real
 El motor utiliza un paso de tiempo (`TIME_STEP`) de 0.1ms. En cada "tick", se calcula la fuga de energía de las neuronas (leak) y se propagan los impulsos a través de las sinapsis.

@@ -39,7 +39,12 @@ Este documento detalla la ubicación de cada componente lógico del motor.
   - `wernicke_process`: Comprensión semántica.
   - `broca_generate`: Planificación y producción del habla.
 
-## 3. Modelo del Mundo y Senses
+## 5. Sentidos y Actuación (Sensory-Motor)
+- **Archivo:** `cerebral/src/modules/auditory_cortex.c`: Cóclea digital y procesamiento de frecuencia.
+- **Archivo:** `cerebral/src/modules/visual_cortex.c`: Fóvea atencional y barrido visual.
+- **Archivo:** `cerebral/src/modules/vocal_tract.c`: Síntesis de voz en tiempo real.
+
+## 6. Modelo del Mundo y Senses
 - **Archivo:** `cerebral/src/modules/world_model.c`
   - `world_model_add_concept`: Mapea nombres a neuronas.
   - `world_model_perceive`: Convierte texto en impulsos eléctricos.

@@ -56,6 +56,10 @@ typedef struct {
     float global_serotonin; // Mood and social stability
 
     bool is_simulating;    // If true, the engine is in "Prospection Mode"
+
+    // Sensory Input Buffers
+    float *visual_input;   // 64x64
+    float *auditory_input; // 32 bands
 } CerebralNetwork;
 
 // Core functions

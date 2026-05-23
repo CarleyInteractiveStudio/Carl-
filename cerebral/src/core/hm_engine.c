@@ -37,6 +37,9 @@ CerebralNetwork* cerebral_init(uint32_t neuron_count) {
 
     net->is_simulating = false;
 
+    net->visual_input = (float*)calloc(64*64, sizeof(float));
+    net->auditory_input = (float*)calloc(32, sizeof(float));
+
     return net;
 }
 
@@ -156,6 +159,8 @@ void cerebral_free(CerebralNetwork *net) {
     if (net) {
         if (net->neurons) free(net->neurons);
         if (net->traces) free(net->traces);
+        if (net->visual_input) free(net->visual_input);
+        if (net->auditory_input) free(net->auditory_input);
         free(net);
     }
 }
