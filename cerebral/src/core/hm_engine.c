@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include "language_areas.h"
 
 CerebralNetwork* cerebral_init(uint32_t neuron_count) {
     CerebralNetwork *net = (CerebralNetwork*)malloc(sizeof(CerebralNetwork));
@@ -66,9 +67,24 @@ void cerebral_tick(CerebralNetwork *net) {
         }
     }
 
+    // 1.5 Background activity (Default Mode Network simulation)
+    // Spontaneous firing of random neurons to simulate autonomous thought
+    if ((uint32_t)(net->current_time / TIME_STEP) % 100 == 0) {
+        uint32_t random_neuron = rand() % net->total_neurons;
+        net->neurons[random_neuron].membrane_potential += 0.5f;
+    }
+
     // 2. Propagate spikes and apply learning
     for (uint32_t i = 0; i < net->total_neurons; i++) {
         Neuron *pre = &net->neurons[i];
+
+        // 2.1 Inner Monologue Loop (Broca -> Wernicke)
+        // If a neuron in the "Broca" range spikes, it feeds back into "Wernicke"
+        // This is a simplified simulation of the inner voice loop.
+        if (pre->has_spiked && i >= 800 && i < 900) { // Assuming 800-900 is Broca
+             uint32_t wernicke_target = i - 200; // Assuming 600-700 is Wernicke
+             cerebral_stimulate(net, wernicke_target, 0.5f);
+        }
 
         // If PRE-synaptic neuron spikes
         if (pre->has_spiked) {
@@ -120,6 +136,20 @@ void cerebral_tick(CerebralNetwork *net) {
 void cerebral_stimulate(CerebralNetwork *net, uint32_t neuron_id, float current) {
     if (!net || neuron_id >= net->total_neurons) return;
     net->neurons[neuron_id].membrane_potential += current;
+}
+
+void cerebral_inflict_pain(CerebralNetwork *net, float intensity) {
+    if (!net) return;
+    // Pain increases pain_level in Insula and drops dopamine
+    net->pain_level += intensity;
+    if (net->pain_level > 1.0f) net->pain_level = 1.0f;
+
+    net->global_dopamine -= intensity * 0.5f;
+    if (net->global_dopamine < 0.0f) net->global_dopamine = 0.0f;
+
+    // High pain increases noradrenaline (stress response)
+    net->global_noradrenaline += intensity * 0.2f;
+    if (net->global_noradrenaline > 1.0f) net->global_noradrenaline = 1.0f;
 }
 
 void cerebral_free(CerebralNetwork *net) {

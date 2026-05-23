@@ -28,8 +28,13 @@ Este documento detalla la ubicación de cada componente lógico del motor.
   - `cerebellum_coordinate`: Ajuste motor y detección de error.
   - `motor_cortex_plan`: Planificación de acciones.
   - `parietal_spatial_map`: Procesamiento de coordenadas espaciales.
+  - `cerebral_inflict_pain` (hm_engine.c): Inyección de señales de castigo.
 
-## 3. Lenguaje (Language Areas)
+## 3. Exportador de Pensamientos (.ccp)
+- **Archivo:** `cerebral/src/modules/ccp_exporter.c`
+  - `ccp_exporter_record_frame`: Guarda el estado mental actual.
+
+## 4. Lenguaje (Language Areas)
 - **Archivo:** `cerebral/src/modules/language_areas.c`
   - `wernicke_process`: Comprensión semántica.
   - `broca_generate`: Planificación y producción del habla.

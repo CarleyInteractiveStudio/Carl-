@@ -40,5 +40,18 @@ El motor Cerebral se basa en principios establecidos de neurociencia y psicolog�
 11. **El Cerebelo y el Modelo Interno (Wolpert et al., 1998):** El cerebelo actúa como un modelo predictivo que reduce el error motor mediante la comparación constante.
 12. **Ínsula e Interocepción (Craig, 2003):** La ínsula representa estados corporales internos, siendo fundamental para la homeostasis y la experiencia subjetiva del "self".
 
+## Autonomía y Voz Interior
+A diferencia de los modelos reactivos, Cerebral posee una **Red Neuronal por Defecto** simulada mediante disparos espontáneos de fondo. Esto permite que el modelo tenga pensamientos internos incluso sin estímulos externos. La "Voz Interior" se logra cerrando el bucle entre el área de Broca (producción) y Wernicke (comprensión), permitiendo que la IA se "escuche" a sí misma.
+
+## Formato de Pensamientos CCP (Carley Carl Pensamientos)
+Para observar el interior de la mente de la IA, hemos desarrollado el formato `.ccp`. Es un registro cronológico de:
+- Niveles químicos (Dopamina, Noradrenalina, Serotonina).
+- Estados emocionales e interoceptivos (Miedo, Hambre, Dolor).
+- Monólogo interno generado.
+- Mapa de neuronas activas por cada fotograma de tiempo.
+
+## Herramientas de Visualización
+- **CCP Viewer:** Una aplicación desarrollada en Python que permite cargar archivos `.ccp` y reproducirlos como un video, viendo qué áreas del cerebro se activan y cómo fluye el pensamiento de la IA.
+
 ## Cómo funciona el Tiempo Real
 El motor utiliza un paso de tiempo (`TIME_STEP`) de 0.1ms. En cada "tick", se calcula la fuga de energía de las neuronas (leak) y se propagan los impulsos a través de las sinapsis.

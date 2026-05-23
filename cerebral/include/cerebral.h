@@ -62,6 +62,7 @@ typedef struct {
 CerebralNetwork* cerebral_init(uint32_t neuron_count);
 void cerebral_tick(CerebralNetwork *net);
 void cerebral_stimulate(CerebralNetwork *net, uint32_t neuron_id, float current);
+void cerebral_inflict_pain(CerebralNetwork *net, float intensity);
 void cerebral_free(CerebralNetwork *net);
 
 #endif // CEREBRAL_H
