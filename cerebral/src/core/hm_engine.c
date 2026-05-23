@@ -26,6 +26,14 @@ CerebralNetwork* cerebral_init(uint32_t neuron_count) {
     net->global_noradrenaline = 0.5f;
     net->curiosity_drive = 0.5f;
     net->coherence_drive = 0.5f;
+
+    net->hunger_level = 0.0f;
+    net->pain_level = 0.0f;
+    net->fatigue_level = 0.0f;
+    net->fear_level = 0.0f;
+    net->motor_error = 0.0f;
+    net->global_serotonin = 0.5f;
+
     net->is_simulating = false;
 
     return net;

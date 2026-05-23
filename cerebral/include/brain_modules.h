@@ -36,4 +36,21 @@ void hypothalamus_update(CerebralNetwork *net);
 // PFC triggers mental simulation of a concept
 void pfc_simulate_prospect(CerebralNetwork *net, uint32_t concept_nid);
 
+// --- New Modules ---
+
+// Amygdala: Processes fear and emotional tagging
+void amygdala_process(CerebralNetwork *net, float threat_signal);
+
+// Insula: Monitors internal states (interoception)
+void insula_monitor(CerebralNetwork *net, float hunger, float pain, float fatigue);
+
+// Cerebellum: Coordination and motor error correction
+void cerebellum_coordinate(CerebralNetwork *net, float actual_output, float expected_output);
+
+// Motor Cortex: Plan actions based on goals
+void motor_cortex_plan(CerebralNetwork *net, uint32_t *goal_neurons, uint32_t count);
+
+// Parietal Cortex: Spatial mapping and sensory integration
+void parietal_spatial_map(CerebralNetwork *net, float x, float y, float z);
+
 #endif

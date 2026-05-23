@@ -12,6 +12,84 @@ void pfc_process(CerebralNetwork *net, uint32_t *active_goal_neurons, uint32_t c
     }
 }
 
+void amygdala_process(CerebralNetwork *net, float threat_signal) {
+    if (!net) return;
+
+    // The amygdala increases fear level based on threat signals
+    float alpha = 0.2f;
+    net->fear_level = (1.0f - alpha) * net->fear_level + alpha * threat_signal;
+
+    // High fear increases noradrenaline (alertness) and reduces dopamine (pleasure inhibition)
+    if (net->fear_level > 0.6f) {
+        net->global_noradrenaline += 0.05f;
+        if (net->global_noradrenaline > 1.0f) net->global_noradrenaline = 1.0f;
+        net->global_dopamine *= 0.95f;
+    }
+
+    // Decay fear level
+    net->fear_level *= 0.99f;
+}
+
+void insula_monitor(CerebralNetwork *net, float hunger, float pain, float fatigue) {
+    if (!net) return;
+
+    // Update internal states
+    net->hunger_level = hunger;
+    net->pain_level = pain;
+    net->fatigue_level = fatigue;
+
+    // High pain or fatigue reduces serotonin (mood)
+    if (net->pain_level > 0.5f || net->fatigue_level > 0.8f) {
+        net->global_serotonin *= 0.98f;
+    }
+}
+
+void cerebellum_coordinate(CerebralNetwork *net, float actual_output, float expected_output) {
+    if (!net) return;
+
+    // Compute motor error
+    net->motor_error = actual_output - expected_output;
+
+    // In a real cerebellum, this would adjust future motor patterns.
+    // Here we simulate it by adjusting a global serotonin/stability signal
+    if (net->motor_error > 0.5f || net->motor_error < -0.5f) {
+        net->global_noradrenaline += 0.01f; // Error increases focus
+        if (net->global_noradrenaline > 1.0f) net->global_noradrenaline = 1.0f;
+    }
+}
+
+void motor_cortex_plan(CerebralNetwork *net, uint32_t *goal_neurons, uint32_t count) {
+    if (!net || !goal_neurons) return;
+
+    // Transform goals from PFC into motor signals
+    // High fear can "paralyze" or trigger rapid reflex-like motor firing
+    float motor_gain = 1.0f - (net->fear_level * 0.5f);
+
+    for (uint32_t i = 0; i < count; i++) {
+        uint32_t nid = goal_neurons[i];
+        if (nid < net->total_neurons) {
+            net->neurons[nid].membrane_potential += 0.1f * motor_gain;
+        }
+    }
+}
+
+void parietal_spatial_map(CerebralNetwork *net, float x, float y, float z) {
+    if (!net) return;
+
+    // The parietal cortex integrates spatial coordinates ("Where" pathway).
+    // We simulate this by modulating curiosity based on spatial exploration.
+    // Large changes in position (novelty in space) increase curiosity drive.
+    static float last_x = 0, last_y = 0, last_z = 0;
+    float dist = (x-last_x)*(x-last_x) + (y-last_y)*(y-last_y) + (z-last_z)*(z-last_z);
+
+    if (dist > 0.1f) {
+        net->curiosity_drive += 0.01f;
+        if (net->curiosity_drive > 1.0f) net->curiosity_drive = 1.0f;
+    }
+
+    last_x = x; last_y = y; last_z = z;
+}
+
 void basal_ganglia_update(CerebralNetwork *net, float reward_signal) {
     if (!net) return;
 

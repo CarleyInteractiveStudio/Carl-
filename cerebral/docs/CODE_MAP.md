@@ -23,6 +23,11 @@ Este documento detalla la ubicación de cada componente lógico del motor.
   - `pfc_simulate_prospect` (Línea 129): Imaginación y simulación mental.
   - `reflex_trigger` (Línea 151): Sistema de instintos/reflejos.
   - `hippocampus_consolidate` (Línea 158): Consolidación de memoria.
+  - `amygdala_process`: Procesamiento de miedo y amenazas.
+  - `insula_monitor`: Monitoreo de estados internos (hambre, dolor).
+  - `cerebellum_coordinate`: Ajuste motor y detección de error.
+  - `motor_cortex_plan`: Planificación de acciones.
+  - `parietal_spatial_map`: Procesamiento de coordenadas espaciales.
 
 ## 3. Lenguaje (Language Areas)
 - **Archivo:** `cerebral/src/modules/language_areas.c`
