@@ -45,13 +45,28 @@ typedef struct {
     float curiosity_drive; // Need for new information
     float coherence_drive; // Need for internal consistency
 
+    // Interoceptive States (Insula)
+    float hunger_level;
+    float pain_level;
+    float fatigue_level;
+
+    // Emotional & Coordination States
+    float fear_level;       // Amygdala output
+    float motor_error;      // Cerebellum feedback
+    float global_serotonin; // Mood and social stability
+
     bool is_simulating;    // If true, the engine is in "Prospection Mode"
+
+    // Sensory Input Buffers
+    float *visual_input;   // 64x64
+    float *auditory_input; // 32 bands
 } CerebralNetwork;
 
 // Core functions
 CerebralNetwork* cerebral_init(uint32_t neuron_count);
 void cerebral_tick(CerebralNetwork *net);
 void cerebral_stimulate(CerebralNetwork *net, uint32_t neuron_id, float current);
+void cerebral_inflict_pain(CerebralNetwork *net, float intensity);
 void cerebral_free(CerebralNetwork *net);
 
 #endif // CEREBRAL_H

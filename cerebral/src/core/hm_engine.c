@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include "language_areas.h"
 
 CerebralNetwork* cerebral_init(uint32_t neuron_count) {
     CerebralNetwork *net = (CerebralNetwork*)malloc(sizeof(CerebralNetwork));
@@ -26,7 +27,18 @@ CerebralNetwork* cerebral_init(uint32_t neuron_count) {
     net->global_noradrenaline = 0.5f;
     net->curiosity_drive = 0.5f;
     net->coherence_drive = 0.5f;
+
+    net->hunger_level = 0.0f;
+    net->pain_level = 0.0f;
+    net->fatigue_level = 0.0f;
+    net->fear_level = 0.0f;
+    net->motor_error = 0.0f;
+    net->global_serotonin = 0.5f;
+
     net->is_simulating = false;
+
+    net->visual_input = (float*)calloc(64*64, sizeof(float));
+    net->auditory_input = (float*)calloc(32, sizeof(float));
 
     return net;
 }
@@ -58,9 +70,24 @@ void cerebral_tick(CerebralNetwork *net) {
         }
     }
 
+    // 1.5 Background activity (Default Mode Network simulation)
+    // Spontaneous firing of random neurons to simulate autonomous thought
+    if ((uint32_t)(net->current_time / TIME_STEP) % 100 == 0) {
+        uint32_t random_neuron = rand() % net->total_neurons;
+        net->neurons[random_neuron].membrane_potential += 0.5f;
+    }
+
     // 2. Propagate spikes and apply learning
     for (uint32_t i = 0; i < net->total_neurons; i++) {
         Neuron *pre = &net->neurons[i];
+
+        // 2.1 Inner Monologue Loop (Broca -> Wernicke)
+        // If a neuron in the "Broca" range spikes, it feeds back into "Wernicke"
+        // This is a simplified simulation of the inner voice loop.
+        if (pre->has_spiked && i >= 800 && i < 900) { // Assuming 800-900 is Broca
+             uint32_t wernicke_target = i - 200; // Assuming 600-700 is Wernicke
+             cerebral_stimulate(net, wernicke_target, 0.5f);
+        }
 
         // If PRE-synaptic neuron spikes
         if (pre->has_spiked) {
@@ -114,10 +141,26 @@ void cerebral_stimulate(CerebralNetwork *net, uint32_t neuron_id, float current)
     net->neurons[neuron_id].membrane_potential += current;
 }
 
+void cerebral_inflict_pain(CerebralNetwork *net, float intensity) {
+    if (!net) return;
+    // Pain increases pain_level in Insula and drops dopamine
+    net->pain_level += intensity;
+    if (net->pain_level > 1.0f) net->pain_level = 1.0f;
+
+    net->global_dopamine -= intensity * 0.5f;
+    if (net->global_dopamine < 0.0f) net->global_dopamine = 0.0f;
+
+    // High pain increases noradrenaline (stress response)
+    net->global_noradrenaline += intensity * 0.2f;
+    if (net->global_noradrenaline > 1.0f) net->global_noradrenaline = 1.0f;
+}
+
 void cerebral_free(CerebralNetwork *net) {
     if (net) {
         if (net->neurons) free(net->neurons);
         if (net->traces) free(net->traces);
+        if (net->visual_input) free(net->visual_input);
+        if (net->auditory_input) free(net->auditory_input);
         free(net);
     }
 }
